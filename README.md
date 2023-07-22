@@ -1,7 +1,7 @@
 # Janet C wrappers for extra UNIX os functions
 
 cfun_chroot:
-    (osx/chroot path) - Set root directory to path.
+    (osx/chroot path) - Set root directory as path.
 
 cfun_chown:
     (osx/chown path user &opt group) - Change owner_id (and optionally
@@ -11,10 +11,20 @@ cfun_setuid:
      (osx/setuid user) - Set effective user_id of process to that of user.
 
  cfun_setgid:
-     (osx/setgid group) - Set effective group_id of process to that of group.,
+     (osx/setgid group) - Set effective group_id of process to that of group.
 
-To install locally:
+cfun_hostname:
+     (osx/hostname) - Returns name of host as string.
+
+To install locally (for testing):
 
 ``` shell
 jpm -l install
 ```
+
+To install globally:
+
+```shell
+sudo jpm install
+```
+

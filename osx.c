@@ -150,6 +150,7 @@ static Janet
 cfun_hostname(int32_t argc, Janet* argv)
 {
     char hn[BUFSIZE+1];
+    char *dot;
     size_t len = BUFSIZE;
     int status;
 
@@ -159,6 +160,7 @@ cfun_hostname(int32_t argc, Janet* argv)
         janet_panicf("hostname: %s", errmsg());
     }
     hn[BUFSIZE] = '\0';
+    if ((dot = strchr(hn, '.')) != NULL) *dot = '\0';
     len = strlen(hn);
     uint8_t *host = janet_string_begin(len);
     memcpy(host, (const uint8_t *) hn, len);
