@@ -7,6 +7,7 @@
  *    chown  (osx/chown path user &opt group)
  *    setuid (osc/setuid user)
  *    setgid (osx/setgid group)
+ *    hostname (osx/hostname)
  *
  *  DESCRIPTION
  *    Provides additional os routines for daemons that need to change
@@ -29,6 +30,7 @@
 
 /* jpm build complains that chroot is not defined */
 extern int chroot(const char*);
+extern int gethostname(char *name, size_t len);
 
 char*
 errmsg(void) {
@@ -138,7 +140,29 @@ cfun_setgid(int32_t argc, Janet* argv)
     if (gid == -1) janet_panicf("setgid: no such group: %s", group);
     if (setgid(gid) != 0) janet_panicf("setgid: %s", errmsg());
     return janet_wrap_nil();
+}
 
+enum {
+    BUFSIZE = 64
+};
+
+static Janet
+cfun_hostname(int32_t argc, Janet* argv)
+{
+    char hn[BUFSIZE+1];
+    size_t len = BUFSIZE;
+    int status;
+
+    janet_fixarity(argc, 0);
+    status = gethostname(hn, len);
+    if (status == -1) {
+        janet_panicf("hostname: %s", errmsg());
+    }
+    hn[BUFSIZE] = '\0';
+    len = strlen(hn);
+    uint8_t *host = janet_string_begin(len);
+    memcpy(host, (const uint8_t *) hn, len);
+    return janet_wrap_string(host);
 }
 
 static JanetReg
@@ -151,6 +175,7 @@ cfuns[] = {
      "(osx/setuid user)\nSet effective user\\_id of process to that of _user_."},
     {"setgid", cfun_setgid,
      "(osx/setgid group)\nSet effective group\\_id of process to that of _group_."},
+    {"hostname", cfun_hostname, "(osx/hostname)\nReturn host name"},
     {NULL, NULL, NULL}
 };
 
