@@ -1,7 +1,7 @@
 # Janet C wrappers for extra UNIX os functions
 
 cfun_chroot:
-    (osx/chroot path) - Set root directory as path.
+    (osx/chroot path) - Set chroot directory as path (must be run as root).
 
 cfun_chown:
     (osx/chown path user &opt group) - Change owner_id (and optionally
@@ -27,4 +27,3 @@ To install globally:
 ```shell
 sudo jpm install
 ```
-
