@@ -172,7 +172,8 @@ cfuns[] = {
     {"chroot", cfun_chroot,
      "(osx/chroot path)\nSet root directory to _path_."},
     {"chown", cfun_chown,
-     "(osx/chown path user &opt group)\nChange owner\\_id (and optionally group\\_id) of path to _user_ and _group_."},
+     "(osx/chown path user &opt group)\nChange owner\\_id "
+     "(and optionally group\\_id) of path to _user_ and _group_."},
     {"setuid", cfun_setuid,
      "(osx/setuid user)\nSet effective user\\_id of process to that of _user_."},
     {"setgid", cfun_setgid,
