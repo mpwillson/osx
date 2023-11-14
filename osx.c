@@ -27,6 +27,7 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <grp.h>
+#include <termios.h>
 
 /* jpm build complains that chroot is not defined */
 extern int chroot(const char*);
@@ -167,6 +168,31 @@ cfun_hostname(int32_t argc, Janet* argv)
     return janet_wrap_string(host);
 }
 
+extern int fileno(FILE *);
+
+static Janet
+cfun_echo(int32_t argc, Janet* argv)
+{
+    janet_fixarity(argc, 1);
+    if (janet_checktype(argv[0], JANET_BOOLEAN)) {
+        struct termios term;
+        int echo = janet_unwrap_boolean(argv[0]);
+        tcgetattr(fileno(stdin), &term);
+        if (echo) {
+            term.c_lflag |= ECHO;
+        }
+        else {
+            term.c_lflag &= ~ECHO;
+        }
+        tcsetattr(fileno(stdin), 0, &term);
+    }
+    else {
+        janet_panic("echo: arg not boolean");
+    }
+
+    return janet_wrap_nil();
+}
+
 static JanetReg
 cfuns[] = {
     {"chroot", cfun_chroot,
@@ -175,10 +201,14 @@ cfuns[] = {
      "(osx/chown path user &opt group)\nChange owner\\_id "
      "(and optionally group\\_id) of path to _user_ and _group_."},
     {"setuid", cfun_setuid,
-     "(osx/setuid user)\nSet effective user\\_id of process to that of _user_."},
+     "(osx/setuid user)\n"
+     "Set effective user\\_id of process to that of _user_."},
     {"setgid", cfun_setgid,
-     "(osx/setgid group)\nSet effective group\\_id of process to that of _group_."},
+     "(osx/setgid group)\n"
+     "Set effective group\\_id of process to that of _group_."},
     {"hostname", cfun_hostname, "(osx/hostname)\nReturn host name"},
+    {"echo", cfun_echo, "(osx/echo {true|false})\n"
+     "Enable or disable echo for stdin."},
     {NULL, NULL, NULL}
 };
 
