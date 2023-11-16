@@ -10,11 +10,14 @@ cfun_chown:
 cfun_setuid:
      (osx/setuid user) - Set effective user_id of process to that of user.
 
- cfun_setgid:
+cfun_setgid:
      (osx/setgid group) - Set effective group_id of process to that of group.
 
 cfun_hostname:
      (osx/hostname) - Returns name of host as string.
+
+cfun_echo:
+     (osx/echo {true|false}) - Turns stdin echo on or off
 
 To install locally (for testing):
 
